@@ -14,6 +14,7 @@ public abstract class Unit {
     int hpMax;
     int cellX;
     int cellY;
+    int stepCounter;
     Vector2 tmp;
 
     public int getCellX() {
@@ -30,7 +31,13 @@ public abstract class Unit {
         this.hp = hpMax;
         this.cellX = cellX;
         this.cellY = cellY;
+        this.stepCounter = 5;
         this.tmp = new Vector2(0, 0);
+    }
+
+    public boolean changeStepCounter() {
+        if (stepCounter-- <= 0) return false;
+        return true;
     }
 
     public boolean takeDamage(int amount) {

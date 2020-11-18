@@ -52,5 +52,6 @@ public class DungeonGame extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         atlas.dispose();
+        gameController.getHero().disposeFont();
     }
 }
