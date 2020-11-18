@@ -8,19 +8,15 @@ public class ProjectileController {
     private static final int MAX_PROJECTILES = 100;
     private Projectile[] items;
 
-    public ProjectileController(TextureAtlas textureAtlas, GameMap gameMap) {
-        this.items = new Projectile[MAX_PROJECTILES];
-        TextureRegion textureRegion = textureAtlas.findRegion("projectile");
-        for (int i = 0; i < items.length; i++) {
-            items[i] = new Projectile(textureRegion, gameMap);
-        }
+    public Projectile[] getItems() {
+        return items;
     }
 
-    public void update(float dt) {
-        for (Projectile p : items) {
-            if (p.isActive()) {
-                p.update(dt);
-            }
+    public ProjectileController(TextureAtlas atlas) {
+        this.items = new Projectile[MAX_PROJECTILES];
+        TextureRegion region = atlas.findRegion("projectile");
+        for (int i = 0; i < items.length; i++) {
+            items[i] = new Projectile(region);
         }
     }
 
@@ -29,6 +25,14 @@ public class ProjectileController {
             if (!p.isActive()) {
                 p.activate(x, y, vx, vy);
                 return;
+            }
+        }
+    }
+
+    public void update(float dt) {
+        for (Projectile p : items) {
+            if (p.isActive()) {
+                p.update(dt);
             }
         }
     }
