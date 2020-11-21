@@ -3,17 +3,21 @@ package ru.geekbrains.dungeon.units;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import ru.geekbrains.dungeon.GameController;
 
+
 import java.util.Random;
+
 
 public class Monster extends Unit {
     private float aiBrainsImplseTime;
     private Unit target;
+    private Random random;
 
     public Monster(TextureAtlas atlas, GameController gc) {
         super(gc, 5, 2, 10);
         this.texture = atlas.findRegion("monster");
         this.textureHp = atlas.findRegion("hp");
         this.hp = -1;
+        this.random = new Random();
     }
 
     public void activate(int cellX, int cellY) {
@@ -34,13 +38,43 @@ public class Monster extends Unit {
             }
             if (aiBrainsImplseTime > 0.4f) {
                 aiBrainsImplseTime = 0.0f;
-                if (canIAttackThisTarget(target)) {
-                    attack(target);
+                if (targetInSight()) {
+                    if (canIAttackThisTarget(target)) {
+                        attack(target);
+                    } else {
+                        tryToMove();
+                    }
                 } else {
-                    tryToMove();
+                    goRandom();
                 }
             }
         }
+    }
+//Ход в рандомное место
+    private void goRandom() {
+        int count=0;
+        int[] randomX={-1,-1,-1,-1};
+        int[] randomY={-1,-1,-1,-1};
+
+
+        for (int i = cellX - 1; i <= cellX + 1; i++) {
+            for (int j = cellY - 1; j <= cellY + 1; j++) {
+                if (Math.abs(cellX - i) + Math.abs(cellY - j) == 1 && gc.getGameMap().isCellPassable(i, j) && gc.getUnitController().isCellFree(i, j)) {
+                   randomX[count]=i;
+                   randomY[count]=j;
+                    count++;
+                }
+            }
+        }
+
+       int randomCounter=random.nextInt(count-1);
+        goTo(randomX[randomCounter], randomY[randomCounter]);
+    }
+
+
+    //проверка на видимость героя
+    private boolean targetInSight() {
+        return Math.sqrt((cellX - target.getCellX()) * (cellX - target.getCellX()) + (cellY - target.getCellY()) * (cellY - target.getCellY())) < 5;
     }
 
     public void tryToMove() {
