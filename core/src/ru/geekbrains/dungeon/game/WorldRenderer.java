@@ -1,6 +1,7 @@
 package ru.geekbrains.dungeon.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,8 +33,12 @@ public class WorldRenderer {
         batch.setColor(1, 1, 1, 0.5f);
         batch.draw(cursorTexture, gc.getCursorX() * GameMap.CELL_SIZE, gc.getCursorY() * GameMap.CELL_SIZE);
         batch.setColor(1, 1, 1, 1);
-
+        font24.setColor(Color.WHITE);
         font24.draw(batch, "Player: " + gc.getUnitController().getHero().getName(), 20, 680);
+        font24.setColor(Color.YELLOW);
+        font24.draw(batch, "Money: " +gc.getUnitController().getHero().getMoney(), 20, 650);
+        font24.setColor(Color.ROYAL);
+        font24.draw(batch, "Round: " + gc.getUnitController().getRound(), 20, 620);
 
         batch.end();
     }

@@ -5,13 +5,14 @@ import ru.geekbrains.dungeon.helpers.Assets;
 import ru.geekbrains.dungeon.game.GameController;
 
 public class Hero extends Unit {
-    private String name;
+
 
     public Hero(GameController gc) {
         super(gc, 1, 1, 10);
         this.name = "Sir Mullih";
         this.hpMax = 100;
         this.hp = this.hpMax;
+        this.money=0;
         this.texture = Assets.getInstance().getAtlas().findRegion("knight");
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
     }
@@ -28,7 +29,5 @@ public class Hero extends Unit {
         }
     }
 
-    public String getName() {
-        return name;
-    }
+
 }

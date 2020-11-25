@@ -2,6 +2,7 @@ package ru.geekbrains.dungeon.game;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ public class UnitController {
     private Unit currentUnit;
     private int index;
     private List<Unit> allUnits;
+    private int round;
 
     public MonsterController getMonsterController() {
         return monsterController;
@@ -39,15 +41,15 @@ public class UnitController {
         this.gc = gc;
         this.hero = new Hero(gc);
         this.monsterController = new MonsterController(gc);
+        this.round=0;
     }
 
     public void init() {
-        this.monsterController.activate(5, 5);
-        this.monsterController.activate(9, 5);
         this.index = -1;
         this.allUnits = new ArrayList<>();
         this.allUnits.add(hero);
-        this.allUnits.addAll(monsterController.getActiveList());
+        activateRandomMonster(2);
+
         this.nextTurn();
     }
 
@@ -55,9 +57,37 @@ public class UnitController {
         index++;
         if (index >= allUnits.size()) {
             index = 0;
+            round++;
+            checkRound();
+            hillAllUnit(1);
+
         }
         currentUnit = allUnits.get(index);
         currentUnit.startTurn();
+    }
+
+    private void hillAllUnit(int i) {
+        for (Unit u : allUnits) {
+            u.hillUnit(i);
+        }
+
+    }
+
+    private void activateRandomMonster(int numberOfMonster){
+        for (int i=0;i<numberOfMonster;i++) {
+            while (!this.monsterController.activate((MathUtils.random(0, gc.getGameMap().getCellsX() - 1)), (MathUtils.random(0, gc.getGameMap().getCellsY() - 1)))) {
+            }
+            this.allUnits.clear();//костыль
+            this.allUnits.add(hero);
+            this.allUnits.addAll(monsterController.getActiveList());
+        }
+    }
+
+    private void checkRound() {
+        if(round%3==0) {
+            activateRandomMonster(1);
+
+        }
     }
 
     public void render(SpriteBatch batch, BitmapFont font18) {
@@ -80,5 +110,12 @@ public class UnitController {
         if (unitIndex <= index) {
             index--;
         }
+    }
+
+    public int getRound() {
+        return round;
+    }
+    public boolean isCellEmpty(int cx, int cy) {
+        return gc.getGameMap().isCellPassable(cx, cy) && isCellFree(cx, cy);
     }
 }

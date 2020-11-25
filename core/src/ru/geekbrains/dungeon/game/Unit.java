@@ -22,6 +22,8 @@ public abstract class Unit implements Poolable {
     int targetX, targetY;
     int turns, maxTurns;
     float innerTimer;
+    int money;
+    String name;
 
     public int getDefence() {
         return defence;
@@ -53,6 +55,7 @@ public abstract class Unit implements Poolable {
         this.movementMaxTime = 0.2f;
         this.attackRange = 2;
         this.innerTimer = MathUtils.random(1000.0f);
+
     }
 
     public void startTurn() {
@@ -96,7 +99,7 @@ public abstract class Unit implements Poolable {
     }
 
     public void attack(Unit target) {
-        target.takeDamage(BattleCalc.attack(this, target));
+        if(target.takeDamage(BattleCalc.attack(this, target))) money+=target.money;
         this.takeDamage(BattleCalc.checkCounterAttack(this, target));
         turns--;
     }
@@ -125,25 +128,34 @@ public abstract class Unit implements Poolable {
         batch.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 
-        float barX = px, barY = py + MathUtils.sin(innerTimer * 5.0f) * 2;
+        float barX = px, barY = py + MathUtils.sin( ((hp==hpMax) ? 0.2f : (innerTimer * 5.0f))) * 2;
         batch.draw(textureHp, barX + 1, barY + 51, 58, 10);
         batch.setColor(0.7f, 0.0f, 0.0f, 1.0f);
         batch.draw(textureHp, barX + 2, barY + 52, 56, 8);
         batch.setColor(0.0f, 1.0f, 0.0f, 1.0f);
         batch.draw(textureHp, barX + 2, barY + 52, (float) hp / hpMax * 56, 8);
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        font18.draw(batch, "" + hp, barX, barY + 64, 60, 1, false);
+        font18.draw(batch, name+"\n" + hp, barX, barY + 86, 60, 1, false);
     }
 
     public int getTurns() {
         return turns;
     }
 
-    public boolean isCellEmpty(int cx, int cy) {
-        return gc.getGameMap().isCellPassable(cx, cy) && gc.getUnitController().isCellFree(cx, cy);
-    }
+
 
     public boolean amIBlocked() {
-        return !(isCellEmpty(cellX - 1, cellY) || isCellEmpty(cellX + 1, cellY) || isCellEmpty(cellX, cellY - 1) || isCellEmpty(cellX, cellY + 1));
+        return !(gc.getUnitController().isCellEmpty(cellX - 1, cellY) || gc.getUnitController().isCellEmpty(cellX + 1, cellY) || gc.getUnitController().isCellEmpty(cellX, cellY - 1) || gc.getUnitController().isCellEmpty(cellX, cellY + 1));
+    }
+
+    public int getMoney() {
+        return money;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void hillUnit(int i) {
+        if(hp<hpMax) hp+=i;
     }
 }

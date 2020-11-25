@@ -16,8 +16,11 @@ public class MonsterController extends ObjectPool<Monster> {
         return new Monster(gc);
     }
 
-    public void activate(int cellX, int cellY) {
-        getActiveElement().activate(cellX, cellY);
+    public boolean activate(int cellX, int cellY) {
+        if(gc.getUnitController().isCellEmpty(cellX,cellY))
+        {getActiveElement().activate(cellX, cellY);
+        return true;}
+        return false;
     }
 
     public Monster getMonsterInCell(int cellX, int cellY) {
