@@ -73,10 +73,11 @@ public class UnitController {
         hero.update(dt);
         monsterController.update(dt);
 
-        if (!currentUnit.isActive() || currentUnit.getTurns() == 0) {
+        if (!currentUnit.isActive() || (currentUnit.getSteps() == 0 && currentUnit.getAttacks()==0)) {
             nextTurn();
         }
     }
+
 
     public void removeUnitAfterDeath(Unit unit) {
         int unitIndex = allUnits.indexOf(unit);

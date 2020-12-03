@@ -4,10 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import ru.geekbrains.dungeon.helpers.Assets;
+import ru.geekbrains.dungeon.helpers.Utils;
 
 public class GameMap {
     public enum CellType {
-        GRASS, WATER, TREE
+        GRASS, WATER, TREE, FOGGY,
     }
 
     private class Cell {
@@ -43,6 +44,8 @@ public class GameMap {
     private Cell[][] data;
     private TextureRegion grassTexture;
     private TextureRegion[] treesTextures;
+    private TextureRegion foggyTexture;
+    private boolean[][] foggyCell;
 
     public GameMap() {
         this.data = new Cell[CELLS_X][CELLS_Y];
@@ -58,7 +61,10 @@ public class GameMap {
         }
 
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
+        this.foggyTexture=Assets.getInstance().getAtlas().findRegion("foggy");
         this.treesTextures = Assets.getInstance().getAtlas().findRegion("trees").split(60, 90)[0];
+        this.foggyCell=new boolean[CELLS_X][CELLS_Y];
+
     }
 
     public boolean isCellPassable(int cx, int cy) {
@@ -81,4 +87,15 @@ public class GameMap {
             }
         }
     }
+    public void renderFog(SpriteBatch batch, Hero hero){
+        for (int i = 0; i < CELLS_X; i++) {
+            for (int j = CELLS_Y - 1; j >= 0; j--) {
+                if(Utils.getCellsIntDistance(i, j, hero.getCellX(), hero.getCellY()) < 5) foggyCell[i][j]=true;
+                if(foggyCell[i][j]==false) batch.draw(foggyTexture,i * CELL_SIZE, j * CELL_SIZE);
+            }
+        }
+
+    }
+
+
 }

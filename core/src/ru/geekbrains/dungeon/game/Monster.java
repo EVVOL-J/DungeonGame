@@ -29,6 +29,9 @@ public class Monster extends Unit {
 
     public void update(float dt) {
         super.update(dt);
+        if(steps==0)
+            if(!canIAttackThisTarget(target))
+                attacks=0;
         if (canIMakeAction()) {
             if (isStayStill()) {
                 aiBrainsImplseTime += dt;
@@ -46,7 +49,8 @@ public class Monster extends Unit {
             return;
         }
         if (amIBlocked()) {
-            turns = 0;
+            steps = 0;
+            attacks=0;
             return;
         }
         if (Utils.getCellsIntDistance(cellX, cellY, target.getCellX(), target.getCellY()) < 5) {

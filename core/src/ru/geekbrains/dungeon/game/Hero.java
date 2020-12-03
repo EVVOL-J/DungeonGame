@@ -22,6 +22,8 @@ public class Hero extends Unit {
 
     public void update(float dt) {
         super.update(dt);
+        if(steps==0)
+            canAttackMonster();
         if (Gdx.input.justTouched() && canIMakeAction()) {
             Monster m = gc.getUnitController().getMonsterController().getMonsterInCell(gc.getCursorX(), gc.getCursorY());
             if (m != null && canIAttackThisTarget(m)) {
@@ -30,6 +32,14 @@ public class Hero extends Unit {
                 goTo(gc.getCursorX(), gc.getCursorY());
             }
         }
+    }
+
+    private void canAttackMonster() {
+        for (int i=0; i<gc.getUnitController().getMonsterController().getActiveList().size();i++)
+        {
+            if(canIAttackThisTarget(gc.getUnitController().getMonsterController().getActiveList().get(i))) return;
+        }
+        attacks=0;
     }
 
     public void renderHUD(SpriteBatch batch, BitmapFont font, int x, int y) {

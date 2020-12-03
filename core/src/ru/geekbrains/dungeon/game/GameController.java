@@ -10,12 +10,15 @@ import ru.geekbrains.dungeon.screens.ScreenManager;
 @Data
 public class GameController {
     public static final int INITIAL_MONSTERS_COUNT = 3;
-    public static final int TURNS_COUNT = 5;
+    public static final int TURNS_COUNT = 4;
+    int steps;
+    int attacks;
 
     private SpriteBatch batch;
     private ProjectileController projectileController;
     private UnitController unitController;
     private GameMap gameMap;
+    private MoneyController moneyController;
 
     private Vector2 mouse;
     private Vector2 pressedMouse;
@@ -31,6 +34,7 @@ public class GameController {
         this.unitController = new UnitController(this);
         this.projectileController = new ProjectileController();
         this.unitController.init(INITIAL_MONSTERS_COUNT);
+        this.moneyController=new MoneyController(this);
         this.round = 1;
     }
 
@@ -50,6 +54,7 @@ public class GameController {
         checkMouse();
         projectileController.update(dt);
         unitController.update(dt);
+        moneyController.update(dt);
     }
 
     public void checkMouse() {

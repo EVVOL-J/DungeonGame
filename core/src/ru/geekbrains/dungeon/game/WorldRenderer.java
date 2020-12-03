@@ -32,6 +32,8 @@ public class WorldRenderer {
         gc.getGameMap().render(batch);
         gc.getUnitController().render(batch, font18);
         gc.getProjectileController().render(batch);
+        gc.getMoneyController().render(batch);
+        gc.getGameMap().renderFog(batch, gc.getUnitController().getHero());
         batch.setColor(1, 1, 1, 0.5f);
         batch.draw(cursorTexture, gc.getCursorX() * GameMap.CELL_SIZE, gc.getCursorY() * GameMap.CELL_SIZE);
         batch.setColor(1, 1, 1, 1);
