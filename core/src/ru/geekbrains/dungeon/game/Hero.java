@@ -1,6 +1,7 @@
 package ru.geekbrains.dungeon.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import lombok.Data;
@@ -24,6 +25,10 @@ public class Hero extends Unit {
         super.update(dt);
         if(steps==0)
             canAttackMonster();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            attacks=0;
+            steps=0;
+        }
         if (Gdx.input.justTouched() && canIMakeAction()) {
             Monster m = gc.getUnitController().getMonsterController().getMonsterInCell(gc.getCursorX(), gc.getCursorY());
             if (m != null && canIAttackThisTarget(m)) {
