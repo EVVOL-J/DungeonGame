@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.Data;
+import ru.geekbrains.dungeon.Armor;
 import ru.geekbrains.dungeon.game.BattleCalc;
 import ru.geekbrains.dungeon.game.GameController;
 import ru.geekbrains.dungeon.game.GameMap;
@@ -56,6 +57,7 @@ public abstract class Unit implements Poolable {
     float movementMaxTime;
     int targetX, targetY;
     Weapon weapon;
+    Armor armor;
 
     float innerTimer;
     StringBuilder stringHelper;
@@ -119,10 +121,10 @@ public abstract class Unit implements Poolable {
     }
 
     public void goTo(int argCellX, int argCellY) {
-        if (!gc.getGameMap().isCellPassable(argCellX, argCellY) || !gc.getUnitController().isCellFree(argCellX, argCellY)) {
+        if (!gc.isCellEmpty(argCellX,argCellY)) {
             return;
         }
-        if (stats.movePoints > 0 && Math.abs(argCellX - cellX) + Math.abs(argCellY - cellY) == 1) {
+        if (stats.movePoints >= gc.getGameMap().costCell(argCellX,argCellY) && Math.abs(argCellX - cellX) + Math.abs(argCellY - cellY) == 1) {
             targetX = argCellX;
             targetY = argCellY;
             currentDirection = Direction.getMoveDirection(cellX, cellY, targetX, targetY);
@@ -152,7 +154,7 @@ public abstract class Unit implements Poolable {
                 movementTime = 0;
                 cellX = targetX;
                 cellY = targetY;
-                stats.movePoints--;
+                stats.movePoints-=gc.getGameMap().costCell(cellX,cellY);
                 gc.getGameMap().checkAndTakeDrop(this);
             }
         }
@@ -192,6 +194,8 @@ public abstract class Unit implements Poolable {
             font18.draw(batch, stringHelper, barX, barY + 80, 60, 1, false);
         }
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+
     }
 
 

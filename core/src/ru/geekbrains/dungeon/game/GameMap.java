@@ -8,7 +8,15 @@ import ru.geekbrains.dungeon.helpers.Assets;
 
 public class GameMap {
     public enum CellType {
-        GRASS, WATER, TREE
+        GRASS(1) , WATER(5), TREE(1000), SWAMP(2),
+        ;
+        private int costCell;
+        CellType(int i) {
+          this.costCell=i;
+        }
+        public int getCostCell() {
+            return costCell;
+        }
     }
 
     public enum DropType {
@@ -41,6 +49,7 @@ public class GameMap {
     public static final int CELLS_Y = 12;
     public static final int CELL_SIZE = 60;
     public static final int FOREST_PERCENTAGE = 5;
+    public static final int SWAMP_PERCENTAGE = 20;
 
     public int getCellsX() {
         return CELLS_X;
@@ -67,6 +76,11 @@ public class GameMap {
             this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.TREE);
 
         }
+        int swampCount = (int) ((CELLS_X * CELLS_Y * SWAMP_PERCENTAGE) / 100.0f);
+        for (int i = 0; i < swampCount; i++) {
+            this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.SWAMP);
+
+        }
 
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
         this.goldTexture = Assets.getInstance().getAtlas().findRegion("chest").split(60, 60)[0][0];
@@ -77,11 +91,15 @@ public class GameMap {
         if (cx < 0 || cx > getCellsX() - 1 || cy < 0 || cy > getCellsY() - 1) {
             return false;
         }
-        if (data[cx][cy].type != CellType.GRASS) {
+        if (data[cx][cy].type != CellType.GRASS && data[cx][cy].type != CellType.SWAMP) {
             return false;
         }
         return true;
     }
+    public int costCell(int cx, int cy){
+        return data[cx][cy].type.getCostCell();
+    }
+
 
     public void render(SpriteBatch batch) {
         for (int i = 0; i < CELLS_X; i++) {
@@ -89,6 +107,11 @@ public class GameMap {
                 batch.draw(grassTexture, i * CELL_SIZE, j * CELL_SIZE);
                 if (data[i][j].type == CellType.TREE) {
                     batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
+                }
+                if (data[i][j].type == CellType.SWAMP) {
+                    batch.setColor(0.0f, 0.5f, 0.0f, 1);
+                    batch.draw(grassTexture, i * CELL_SIZE, j * CELL_SIZE);
+                    batch.setColor(1.0f, 1.0f, 1.0f, 1);
                 }
                 if (data[i][j].dropType == DropType.GOLD) {
                     batch.draw(goldTexture, i * CELL_SIZE, j * CELL_SIZE);
@@ -125,4 +148,6 @@ public class GameMap {
         currentCell.dropType = DropType.NONE;
         currentCell.dropPower = 0;
     }
+
+
 }

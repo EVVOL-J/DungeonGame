@@ -24,14 +24,14 @@ public class UnitController {
         return currentUnit == unit;
     }
 
-    public boolean isCellFree(int cellX, int cellY) {
+    public Unit isCellFree(int cellX, int cellY) {
         for (int i = 0; i < allUnits.size(); i++) {
             Unit u = allUnits.get(i);
             if (u.getCellX() == cellX && u.getCellY() == cellY) {
-                return false;
+                return u;
             }
         }
-        return true;
+        return null;
     }
 
     public UnitController(GameController gc) {
@@ -70,6 +70,7 @@ public class UnitController {
     public void render(SpriteBatch batch, BitmapFont font18) {
         hero.render(batch, font18);
         monsterController.render(batch, font18);
+
     }
 
     public void update(float dt) {

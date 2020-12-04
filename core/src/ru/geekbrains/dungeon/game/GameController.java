@@ -43,7 +43,7 @@ public class GameController {
     }
 
     public boolean isCellEmpty(int cx, int cy) {
-        return gameMap.isCellPassable(cx, cy) && unitController.isCellFree(cx, cy);
+        return gameMap.isCellPassable(cx, cy) && unitController.isCellFree(cx, cy)==null;
     }
 
     public void update(float dt) {

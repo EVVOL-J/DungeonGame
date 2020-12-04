@@ -1,6 +1,7 @@
 package ru.geekbrains.dungeon.game.units;
 
 import com.badlogic.gdx.math.MathUtils;
+import ru.geekbrains.dungeon.Armor;
 import ru.geekbrains.dungeon.game.Weapon;
 import ru.geekbrains.dungeon.helpers.Assets;
 import ru.geekbrains.dungeon.game.GameController;
@@ -15,6 +16,7 @@ public class Monster extends Unit {
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.stats.hp = -1;
         this.weapon = new Weapon(Weapon.Type.SWORD, 2, 1);
+        this.armor=new Armor(Armor.Type.ARMOR,Weapon.Type.SPEAR,1);;
     }
 
     public Monster activate(int cellX, int cellY) {
