@@ -24,7 +24,7 @@ public class Hero extends Unit {
     private Label hungryLabel;
 
     public Hero(GameController gc) {
-        super(gc, 1, 1, 10, "Hero");
+        super(gc, 1, 1, 2, "Hero");
         this.name = "Sir Lancelot";
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.weapon = new Weapon(Weapon.Type.SPEAR, 2, 2, 0);
@@ -48,6 +48,8 @@ public class Hero extends Unit {
             tryToEndTurn();
         }
         updateGui();
+        if(stats.hp<=0)
+            ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAMEOVER);
     }
 
 
