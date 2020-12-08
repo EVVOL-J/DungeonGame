@@ -21,6 +21,7 @@ public class Hero extends Unit {
     private Group guiGroup;
     private Label hpLabel;
     private Label goldLabel;
+    private Label hungryLabel;
 
     public Hero(GameController gc) {
         super(gc, 1, 1, 10, "Hero");
@@ -28,14 +29,17 @@ public class Hero extends Unit {
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.weapon = new Weapon(Weapon.Type.SPEAR, 2, 2, 0);
         this.createGui();
+        this.stats.hungry=stats.maxHungry;
     }
 
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched() && canIMakeAction()) {
             Monster m = gc.getUnitController().getMonsterController().getMonsterInCell(gc.getCursorX(), gc.getCursorY());
+            gc.getGameMap().checkAndTakeBerry(this,gc.getCursorX(),gc.getCursorY());
             if (m != null && canIAttackThisTarget(m, 1)) {
                 attack(m);
+
             } else {
                 goTo(gc.getCursorX(), gc.getCursorY());
             }
@@ -45,6 +49,8 @@ public class Hero extends Unit {
         }
         updateGui();
     }
+
+
 
     public void tryToEndTurn() {
         if (gc.getUnitController().isItMyTurn(this) && isStayStill()) {
@@ -60,6 +66,10 @@ public class Hero extends Unit {
         stringHelper.setLength(0);
         stringHelper.append(gold);
         goldLabel.setText(stringHelper);
+
+        stringHelper.setLength(0);
+        stringHelper.append(stats.hungry).append(" / ").append(stats.maxHungry);
+        hungryLabel.setText(stringHelper);
     }
 
     public void createGui() {
@@ -70,12 +80,15 @@ public class Hero extends Unit {
         Label.LabelStyle labelStyle = new Label.LabelStyle(font24, Color.WHITE);
         this.hpLabel = new Label("", labelStyle);
         this.goldLabel = new Label("", labelStyle);
+        this.hungryLabel = new Label("", labelStyle);
         this.hpLabel.setPosition(155, 30);
         this.goldLabel.setPosition(400, 30);
+        this.hungryLabel.setPosition(660, 30);
         Image backgroundImage = new Image(Assets.getInstance().getAtlas().findRegion("upperPanel"));
         this.guiGroup.addActor(backgroundImage);
         this.guiGroup.addActor(hpLabel);
         this.guiGroup.addActor(goldLabel);
+        this.guiGroup.addActor(hungryLabel);
         this.guiGroup.setPosition(0, ScreenManager.WORLD_HEIGHT - 60);
 
         skin.dispose();

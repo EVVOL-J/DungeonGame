@@ -77,6 +77,9 @@ public class GameController {
         if (round % 5 == 0) {
             gameMap.generateBerryNumber(1);
         }
+        if(unitController.getHero().getStats().getHungry()<=0)
+            unitController.getHero().getStats().decHp(1);
+
     }
 
     public boolean isCellEmpty(int cx, int cy) {

@@ -168,9 +168,23 @@ public abstract class Unit implements Poolable {
             }
         }
         stats.attackPoints--;
+        heroChangeHungry(-2);
+
 
         gc.getEffectController().setup(target.getCellCenterX(), target.getCellCenterY(), weapon.getFxIndex());
     }
+public void heroChangeHungry(int i){
+    if(this==gc.getUnitController().getHero()) {
+        stats.hungry += i;
+        if (stats.hungry < 0) {
+            stats.hungry = 0;
+        }
+        if (stats.hungry > stats.maxHungry) {
+            stats.hungry = stats.maxHungry;
+        }
+    }
+
+}
 
     public void update(float dt) {
         innerTimer += dt;
@@ -182,6 +196,7 @@ public abstract class Unit implements Poolable {
                 cellX = targetX;
                 cellY = targetY;
                 stats.movePoints--;
+                heroChangeHungry(-1);
                 gc.getGameMap().checkAndTakeDrop(this);
             }
         }

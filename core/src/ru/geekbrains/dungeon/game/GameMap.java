@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import ru.geekbrains.dungeon.game.units.Unit;
 import ru.geekbrains.dungeon.helpers.Assets;
+import ru.geekbrains.dungeon.helpers.Utils;
 
 import java.security.Key;
 
@@ -178,19 +179,19 @@ public class GameMap {
         currentCell.dropPower = 0;
     }
 
-    public void checkAndTakeBerry(Unit unit) {
-        Cell currentCell = data[unit.getCellX()][unit.getCellY()];
-        if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-            Cell click=data[gc.getCursorX()][gc.getCursorY()];
-        }
-
-        if (currentCell.dropType == DropType.NONE) {
+    public void checkAndTakeBerry(Unit unit, int CellX, int CellY) {
+        Cell currentCell = data[CellX][CellY];
+        if(!Utils.isCellsAreNeighbours(CellX,CellY,unit.getCellX(),unit.getCellY()))
+            return;
+        if (currentCell.type != CellType.TREE) {
             return;
         }
-        if (currentCell.dropType == DropType.GOLD) {
-            unit.addGold(currentCell.dropPower);
+        if(currentCell.dropType==DropType.BERRY){
+            unit.heroChangeHungry(20);
+            unit.cure(5);
+            currentCell.dropType=DropType.NONE;
         }
-        currentCell.dropType = DropType.NONE;
-        currentCell.dropPower = 0;
+
+
     }
 }
